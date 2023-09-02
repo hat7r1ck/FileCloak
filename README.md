@@ -1,43 +1,56 @@
-# FileCloak - Secure File Operations App
+# FileCloak
+FileCloak is a simple file encryption and decryption tool built using Python and the Tkinter library. It allows you to secure your files by encrypting them using the Fernet symmetric encryption algorithm. You can also decrypt and delete files securely.
 
-FileCloak is a versatile Python-based desktop application designed for secure file operations, including encryption, decryption, and file deletion. It provides an intuitive graphical user interface (GUI) for managing your sensitive files with ease.
-
-![Screenshot 2023-09-02 004155](https://github.com/hat7r1ck/FileCloak/assets/110708720/9c8b6a93-8b49-4fb5-a25d-2a69acf67fce)
-
+![Screenshot 2023-09-02 083923](https://github.com/hat7r1ck/FileCloak/assets/110708720/718fb484-765c-4b79-b5d9-19b36efdade7)
 
 ## Features
 
-- **File Encryption**: Encrypt your files using strong cryptographic algorithms, keeping your data safe from unauthorized access.
+- Encrypt files to keep them secure.
+- Decrypt encrypted files when you need to access them.
+- Securely delete files, making them unrecoverable.
+- Dark mode for ease of use.
 
-- **File Decryption**: Decrypt encrypted files when you need to access their contents securely.
+## How It Works
 
-- **File Deletion**: Permanently delete files, ensuring they are unrecoverable.
+FileCloak uses the Fernet symmetric encryption algorithm, which requires a secret encryption key to encrypt and decrypt files. Here's how the program handles the encryption key:
 
-- **Clear File List**: Easily clear the list of selected files with a single click.
+1. When you first run the program, it checks if an encryption key file (`key.key`) exists in the program's directory.
+2. If the key file exists, the program loads the encryption key from the file.
+3. If the key file doesn't exist, FileCloak generates a random encryption key, saves it to `key.key`, and uses it for encryption and decryption.
 
-- **Dark Mode**: Toggle between light and dark modes for a comfortable viewing experience.
+This approach ensures that you can use the same encryption key across multiple sessions of the program, so you don't have to remember it or input it each time.
 
 ## Getting Started
 
-### Prerequisites
+1. Clone or download this repository to your local machine.
 
-Before you begin, ensure you have met the following requirements:
+2. Make sure you have Python installed. FileCloak is compatible with Python 3.6 and above.
+
+3. Install the required Python packages using pip:
 
 - Python 3.7 or higher installed on your system.
 - cryptography
 - tkinter
 
-### Installation
+4. Run the program:
 
-1. Clone the repository.
-2. Navigate to the project directory
-3. Run the application:
+5. Use the program to browse, encrypt, decrypt, and delete files securely.
 
 ## Usage
 
-1. Select Files: Click the "Browse" button to select the files you want to operate on. You can select multiple files.
-2. Encrypt: Click the "Encrypt File" button to encrypt the selected files. Encrypted files will have the .enc extension.
-3. Decrypt: Click the "Decrypt File" button to decrypt encrypted files. The original files will be restored.
-4. Delete: Click the "Delete Files" button to permanently delete the selected files. Be cautious; deleted files cannot be recovered.
-5. Clear List: Click the "Clear List" button to remove all selected files from the list.
-6. Dark Mode: Toggle between light and dark modes for a personalized visual experience.
+1. **Browse for Files**: Click the "Browse" button to select files you want to operate on.
+
+2. **Encrypt Files**: After selecting files, click the "Encrypt File" button to encrypt them. The original files will be deleted securely.
+
+3. **Decrypt Files**: To decrypt previously encrypted files, click the "Decrypt File" button. Decrypted files will be saved without the ".enc" extension.
+
+4. **Delete Files**: To securely delete files without encryption, click the "Delete Files" button. Deleted files are unrecoverable.
+
+5. **Clear List**: Click the "Clear List" button to clear the file list.
+
+6. **Dark Mode**: Toggle the "Dark Mode" checkbox for a dark-themed user interface.
+
+## Contributing
+
+Contributions are welcome! If you have any ideas for improvements or new features, please create an issue or submit a pull request.
+
