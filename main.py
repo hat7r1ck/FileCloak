@@ -2,10 +2,64 @@ import os
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk
+from tkinter import PhotoImage
 from cryptography.fernet import Fernet
 
-# Generate a random encryption key
-encryption_key = Fernet.generate_key()
+# Function to generate or load the encryption key
+def get_encryption_key():
+    key_file_path = "key.key"
+    if os.path.exists(key_file_path):
+        with open(key_file_path, "rb") as key_file:
+            encryption_key = key_file.read()
+    else:
+        encryption_key = Fernet.generate_key()
+        with open(key_file_path, "wb") as key_file:
+            key_file.write(encryption_key)
+    return encryption_key
+
+# Initialize the encryption key
+encryption_key = get_encryption_key()
+fernet = Fernet(encryption_key)
+
+# Function to encrypt a file
+def encrypt_file(file_path):
+    try:
+        with open(file_path, "rb") as file:
+            file_data = file.read()
+        encrypted_data = fernet.encrypt(file_data)
+        with open(file_path + ".enc", "wb") as encrypted_file:
+            encrypted_file.write(encrypted_data)
+        os.remove(file_path)
+        return True
+    except Exception as e:
+        print(f"Encryption error: {e}")
+        return False
+
+# Function to decrypt a file
+def decrypt_file(file_path):
+    try:
+        with open(file_path, "rb") as file:
+            file_data = file.read()
+        decrypted_data = fernet.decrypt(file_data)
+        decrypted_file_path = file_path.replace(".enc", "")
+        with open(decrypted_file_path, "wb") as decrypted_file:
+            decrypted_file.write(decrypted_data)
+        return True
+    except Exception as e:
+        print(f"Decryption error: {e}")
+        return False
+
+# Generate a random encryption key (only if key file doesn't exist)
+def generate_encryption_key_if_not_exists():
+    key_file_path = "key.key"
+    if not os.path.exists(key_file_path):
+        encryption_key = Fernet.generate_key()
+        with open(key_file_path, "wb") as key_file:
+            key_file.write(encryption_key)
+
+generate_encryption_key_if_not_exists()
+# Load the encryption key
+encryption_key = get_encryption_key()
 fernet = Fernet(encryption_key)
 
 def delete_files():
@@ -104,7 +158,7 @@ def toggle_dark_mode():
 # Create the main window
 app = tk.Tk()
 app.title("FileCloak")
-app.geometry("600x500")  # Set initial window size
+app.geometry("500x550")  # Set initial window size
 
 # Create style for buttons
 style = ttk.Style()
@@ -120,31 +174,30 @@ dark_mode_var = tk.BooleanVar(value=False)
 
 # Create widgets
 file_label = tk.Label(app, text="Select files:")
-file_list = tk.Text(app, height=12, width=50)
+file_list = tk.Text(app, height=5, width=30)
 browse_button = ttk.Button(app, text="Browse", command=browse_files)
 encrypt_button = ttk.Button(app, text="Encrypt File", command=encrypt_file)
 decrypt_button = ttk.Button(app, text="Decrypt File", command=decrypt_file)
 delete_button = ttk.Button(app, text="Delete Files", command=delete_files)
-clear_button = ttk.Button(app, text="Clear List", command=clear_files)
+clear_button = ttk.Button(app, text="Clear List", command=clear_file_list)
 result_text = tk.Label(app, text="", fg="green", anchor="w")
 dark_mode_checkbox = ttk.Checkbutton(app, text="Dark Mode", variable=dark_mode_var, command=toggle_dark_mode)
 
 # Place widgets using grid layout
 file_label.grid(row=0, column=0, sticky="w", padx=10, pady=10)
-file_list.grid(row=1, column=0, padx=10, pady=10, columnspan=2, rowspan=6, sticky="nsew")
-browse_button.grid(row=14, column=0, padx=10, pady=10, sticky="w")
-encrypt_button.grid(row=15, column=0, padx=10, pady=10, sticky="w")
-decrypt_button.grid(row=16, column=0, padx=10, pady=10, sticky="w")
-delete_button.grid(row=17, column=0, padx=10, pady=10, sticky="w")
-clear_button.grid(row=18, column=0, padx=10, pady=10, sticky="w")
-result_text.grid(row=19, column=0, columnspan=2, padx=10, pady=10, sticky="w")
-dark_mode_checkbox.grid(row=20, column=0, columnspan=2, padx=10, pady=10, sticky="w")
+file_list.grid(row=1, column=0, padx=10, pady=10, columnspan=4, sticky="nsew")
+browse_button.grid(row=3, column=0, padx=10, pady=10, sticky="w")
+encrypt_button.grid(row=4, column=0, padx=10, pady=10, sticky="w")
+decrypt_button.grid(row=5, column=0, padx=10, pady=10, sticky="w")
+delete_button.grid(row=6, column=0, padx=10, pady=10, sticky="w")
+clear_button.grid(row=7, column=0, padx=10, pady=10, sticky="w")
+result_text.grid(row=8, column=0, columnspan=2, padx=10, pady=10, sticky="w")
+dark_mode_checkbox.grid(row=9, column=0, columnspan=2, padx=10, pady=10, sticky="w")
 
 # Configure grid rows and columns
 app.grid_rowconfigure(0, weight=1)
 app.grid_rowconfigure(1, weight=1)
 app.grid_columnconfigure(0, weight=1)
-app.grid_columnconfigure(1, weight=1)
 
 # Start the application
 app.mainloop()
